@@ -1,0 +1,31 @@
+# Mini Game Hub - Python Dependencies
+# ====================================
+# 
+# Installation: pip install -r requirements.txt
+#
+# Python Version: 3.8+
+
+# Password hashing library for secure authentication
+bcrypt>=4.0.1
+customtkinter>=5.2.0
+
+# Note: tkinter is included with Python standard library
+# If tkinter is not available on your system:
+# - Ubuntu/Debian: sudo apt-get install python3-tk
+# - macOS: Included with Python installation
+# - Windows: Included with Python installation
+
+# Optional dependencies for development:
+
+# Testing
+# pytest>=7.0.0
+# pytest-cov>=4.0.0
+
+# Code quality
+# pylint>=2.15.0
+# black>=22.0.0
+# mypy>=0.990
+
+# Documentation
+# sphinx>=5.0.0
+# sphinx-rtd-theme>=1.0.0
