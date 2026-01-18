@@ -107,6 +107,18 @@ class Dashboard:
                 'description': 'Guess the word',
                 'icon': '📝',
                 'command': self.launch_hangman_game
+            },
+            {
+                'name': 'Typing Defense',
+                'description': 'Type fast to survive',
+                'icon': '⌨️',
+                'command': self.launch_typing_game
+            },
+            {
+                'name': 'Simon Says',
+                'description': 'Follow the sequence',
+                'icon': '🔴',
+                'command': self.launch_simon_game
             }
         ]
         
@@ -204,6 +216,30 @@ class Dashboard:
         except Exception as e:
             messagebox.showerror("Error", f"Failed to launch game: {str(e)}")
     
+    def launch_typing_game(self):
+        """Launch the Typing Defense Game."""
+        try:
+            from games.typing_game import TypingGame
+            game_window = ctk.CTkToplevel(self.root)
+            game_window.attributes('-topmost', True)
+            game_window.after(100, lambda: game_window.attributes('-topmost', False))
+            
+            TypingGame(game_window, self.user_data, self.on_game_close)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to launch game: {str(e)}")
+
+    def launch_simon_game(self):
+        """Launch Simon Says Game."""
+        try:
+            from games.simon_game import SimonGame
+            game_window = ctk.CTkToplevel(self.root)
+            game_window.attributes('-topmost', True)
+            game_window.after(100, lambda: game_window.attributes('-topmost', False))
+            
+            SimonGame(game_window, self.user_data, self.on_game_close)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to launch game: {str(e)}")
+
     def on_game_close(self):
         """Callback when a game is closed."""
         self.load_user_stats()  # Refresh stats

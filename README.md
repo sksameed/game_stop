@@ -1,4 +1,4 @@
-# 🎮 Mini Game Hub
+#  Mini Game Hub
 
 **A modern, immersive Python-based gaming platform.**
 
@@ -9,31 +9,33 @@
 
 ---
 
-## � Overview
+##  Overview
 
 **Mini Game Hub** is a desktop application that bundles multiple classic games into a single, unified interface. Built with modern design principles, it features a sleek dark-mode UI, secure user authentication, and persistent statistical tracking.
 
 Whether you want to challenge your memory, test your vocabulary, or solve complex mazes, Mini Game Hub provides a seamless experience.
 
-## ✨ Key Features
+##  Key Features
 
-### 🎨 Modern Experience
+###  Modern Experience
 *   **Sleek UI**: Built using **CustomTkinter** for a professional, responsive look with a native dark mode.
 *   **Immersive**: Launches in **Full Screen / Maximized** mode by default for focused gameplay.
 *   **Responsive**: Fluid layouts that adapt to your screen size.
 
-### 🔒 Security & Persistence
+###  Security & Persistence
 *   **Secure Auth**: User registration and login protected by industry-standard **bcrypt** password hashing.
 *   **Local Database**: All user profiles, game history, and statistics are stored securely in a local **SQLite** database.
 
-### 🕹️ The Games
+###  The Games
 | Game | Description | Highlights |
 |------|-------------|------------|
-| 🎯 **Maze Path** | Navigate through procedural mazes. | Pathfinding algorithms, multiple difficulties. |
-| 🃏 **Memory Card** | Classic tile-matching puzzle. | Time tracking, move efficiency scoring. |
-| 📝 **Hangman** | Guess the word before time runs out. | Visual progression, multiple categories. |
+|  **Maze Path** | Navigate through procedural mazes. | Pathfinding algorithms, multiple difficulties. |
+|  **Memory Card** | Classic tile-matching puzzle. | Time tracking, move efficiency scoring. |
+|  **Hangman** | Guess the word before time runs out. | Visual progression, multiple categories. |
+|  **Typing Defense** | Type falling words to destroy them. | Action typing, increasing speed. |
+|  **Simon Says** | Repeat the flashing color sequence. | Memory challenge, progressive difficulty. |
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 *   **Language**: Python 3.8+
 *   **GUI Framework**: [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) (Modern wrapper for Tkinter)
@@ -41,7 +43,7 @@ Whether you want to challenge your memory, test your vocabulary, or solve comple
 *   **Security**: bcrypt
 *   **Architecture**: Modular MVC-like structure
 
-## � Getting Started
+##  Getting Started
 
 ### Prerequisites
 *   Python 3.8 or higher installed on your system.
@@ -64,24 +66,24 @@ Whether you want to challenge your memory, test your vocabulary, or solve comple
     python main.py
     ```
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 mini_game_hub/
-├── main.py                  # 🚀 Application entry point
-├── requirements.txt         # 📦 Project dependencies
-├── auth/                    # 🔐 Authentication logic & handlers
-├── database/                # 💾 Database connection & models
-├── games/                   # 🎮 Game classes & logic
-├── ui/                      # 🖥️ User Interface components
-└── utils/                   # 🛠️ Helper functions & validators
+├── main.py                  #  Application entry point
+├── requirements.txt         #  Project dependencies
+├── auth/                    #  Authentication logic & handlers
+├── database/                #  Database connection & models
+├── games/                   #  Game classes & logic
+├── ui/                      #  User Interface components
+└── utils/                   #  Helper functions & validators
 ```
 
-## � Screenshots
+## Screenshots
 
-*(Add screenshots of your Dashboard and Games here)*
 
-## 🤝 Contributing
+
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -91,6 +93,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4.  Push to the branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the `LICENSE` file for details.
