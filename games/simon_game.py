@@ -20,10 +20,10 @@ class SimonGame(BaseGame):
         
         # Colors: (Normal, Active/Bright)
         self.color_map = {
-            "green": ("#27AE60", "#2ECC71"),
-            "red": ("#C0392B", "#E74C3C"),
-            "blue": ("#2980B9", "#3498DB"),
-            "yellow": ("#F39C12", "#F1C40F")
+            "green": ("#27AE60", "#00FF00"),  # Normal -> Lime
+            "red": ("#C0392B", "#FF0000"),    # Normal -> Pure Red
+            "blue": ("#2980B9", "#00BFFF"),   # Normal -> Deep Sky Blue
+            "yellow": ("#F39C12", "#FFFF00")  # Normal -> Yellow
         }
         
         super().__init__(root, user_data, on_close_callback, "Simon Says")
