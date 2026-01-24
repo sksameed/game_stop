@@ -1,9 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
+import win32api
+import winsound
 import random
 import time
 import sys
 import os
+import customtkinter as ctk
+from typing import List, Dict, Any, Callable, Tuple
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -11,39 +15,46 @@ from games.base_game import BaseGame
 from ui.styles import Colors, Fonts, ButtonStyles
 
 class SimonGame(BaseGame):
-    def __init__(self, root, user_data, on_close_callback):
-        self.sequence = []
-        self.player_sequence = []
-        self.buttons = {} # key: color_name, value: widget
-        self.game_active = False
-        self.showing_sequence = False
+    """
+    Simon Says Game Implementation.
+    Players must memorize and repeat a sequence of colors/sounds.
+    """
+    
+    def __init__(self, root: ctk.CTk, user_data: Dict[str, Any], on_close_callback: Callable[[], None]):
+        """Initialize the Simon Game."""
+        self.sequence: List[str] = []
+        self.player_sequence: List[str] = []
+        self.buttons: Dict[str, ctk.CTkButton] = {} 
+        self.game_active: bool = False
+        self.showing_sequence: bool = False
         
-        # Colors: (Normal, Active/Bright)
-        self.color_map = {
-            "green": ("#27AE60", "#00FF00"),  # Normal -> Lime
-            "red": ("#C0392B", "#FF0000"),    # Normal -> Pure Red
-            "blue": ("#2980B9", "#00BFFF"),   # Normal -> Deep Sky Blue
-            "yellow": ("#F39C12", "#FFFF00")  # Normal -> Yellow
+        # Colors: (Normal, Active/Bright, Frequency)
+        self.color_map: Dict[str, Dict[str, Any]] = {
+            "green":  {"normal": "#1E8449", "bright": "#2ECC71", "freq": 300},
+            "red":    {"normal": "#922B21", "bright": "#E74C3C", "freq": 400},
+            "blue":   {"normal": "#2874A6", "bright": "#3498DB", "freq": 500},
+            "yellow": {"normal": "#D4AC0D", "bright": "#F1C40F", "freq": 600}
         }
         
         super().__init__(root, user_data, on_close_callback, "Simon Says")
         self.create_game_ui()
 
-    def create_game_ui(self):
+    def create_game_ui(self) -> None:
+        """Sets up the visual elements for the game."""
         # Top frame for controls
-        self.top_frame = tk.Frame(self.root, bg=Colors.BACKGROUND)
+        self.top_frame = ctk.CTkFrame(self.root, fg_color="transparent")
         self.top_frame.pack(pady=20)
         
-        self.status_label = tk.Label(self.top_frame, text="Watch the sequence...", font=Fonts.large(),
-                                   bg=Colors.BACKGROUND, fg=Colors.TEXT)
+        self.status_label = ctk.CTkLabel(self.top_frame, text="Watch the sequence...", 
+                                       font=Fonts.large())
         self.status_label.pack(pady=10)
         
-        self.start_btn = tk.Button(self.top_frame, text="Start Game", command=self.start_game,
-                                  **ButtonStyles.PRIMARY)
+        self.start_btn = ctk.CTkButton(self.top_frame, text="Start Game", command=self.start_game,
+                                      font=Fonts.normal(), height=40)
         self.start_btn.pack(pady=5)
         
         # Game board (2x2 grid)
-        self.board_frame = tk.Frame(self.root, bg=Colors.BACKGROUND)
+        self.board_frame = ctk.CTkFrame(self.root, fg_color="transparent")
         self.board_frame.pack(expand=True)
         
         positions = [
@@ -52,29 +63,32 @@ class SimonGame(BaseGame):
         ]
         
         for color, row, col in positions:
-            # Using Canvas for circular buttons feeling or just colored frames
-            # Let's use simple Frames or Labels used as buttons for filling space
-            btn = tk.Canvas(self.board_frame, width=200, height=200, 
-                           bg=self.color_map[color][0], highlightthickness=0)
-            btn.grid(row=row, column=col, padx=10, pady=10)
+            # Using CTkButton with large corner radius for circular look
+            btn = ctk.CTkButton(self.board_frame, text="", width=200, height=200,
+                               fg_color=self.color_map[color]["normal"],
+                               hover_color=self.color_map[color]["bright"],
+                               corner_radius=20)
+            btn.grid(row=row, column=col, padx=20, pady=20)
             
             # Bind click
             btn.bind("<Button-1>", lambda e, c=color: self.handle_click(c))
             
             self.buttons[color] = btn
 
-    def start_game(self):
+    def start_game(self) -> None:
+        """Starts a new game session."""
         self.sequence = []
         self.player_sequence = []
         self.score = 0
         self.game_active = True
-        self.start_btn.config(state='disabled')
+        self.start_btn.configure(state='disabled')
         self.start_time = time.time()
         self.update_score_display()
         
         self.next_round()
 
-    def next_round(self):
+    def next_round(self) -> None:
+        """Proceeds to the next round by adding a step to the sequence."""
         self.player_sequence = []
         self.score = len(self.sequence)
         self.update_score_display()
@@ -83,12 +97,13 @@ class SimonGame(BaseGame):
         colors = list(self.color_map.keys())
         self.sequence.append(random.choice(colors))
         
-        self.status_label.config(text=f"Round {len(self.sequence)}")
+        self.status_label.configure(text=f"Round {len(self.sequence)}")
         
         # Play sequence
         self.root.after(1000, self.play_sequence)
 
-    def play_sequence(self):
+    def play_sequence(self) -> None:
+        """Plays back the current sequence to the player."""
         self.showing_sequence = True
         delay = 0
         
@@ -98,22 +113,41 @@ class SimonGame(BaseGame):
             
         self.root.after(delay, self.enable_input)
 
-    def flash_button(self, color):
+    def flash_button(self, color: str) -> None:
+        """
+        Visually flashes a button and plays a sound.
+        
+        Args:
+            color: The color key of the button to flash.
+        """
         if not self.root: return
         btn = self.buttons[color]
-        original_color = self.color_map[color][0]
-        bright_color = self.color_map[color][1]
+        original_color = self.color_map[color]["normal"]
+        bright_color = self.color_map[color]["bright"]
+        frequency = self.color_map[color]["freq"]
         
-        btn.config(bg=bright_color)
-        # Optional: Sound beep here
+        btn.configure(fg_color=bright_color)
         
-        self.root.after(500, lambda: btn.config(bg=original_color))
+        # Sound beep
+        try:
+            winsound.Beep(frequency, 300)
+        except:
+            pass
+        
+        self.root.after(500, lambda: btn.configure(fg_color=original_color))
 
-    def enable_input(self):
+    def enable_input(self) -> None:
+        """Enables player input after sequence display."""
         self.showing_sequence = False
-        self.status_label.config(text="Your Turn!")
+        self.status_label.configure(text="Your Turn!")
 
-    def handle_click(self, color):
+    def handle_click(self, color: str) -> None:
+        """
+        Handle player button click.
+        
+        Args:
+            color: The color clicked.
+        """
         if not self.game_active or self.showing_sequence:
             return
         
@@ -128,20 +162,27 @@ class SimonGame(BaseGame):
             
         # Check if round complete
         if len(self.player_sequence) == len(self.sequence):
-            self.status_label.config(text="Good Job!")
+            self.status_label.configure(text="Good Job!")
             self.root.after(1000, self.next_round)
 
-    def end_game(self):
+    def end_game(self) -> None:
+        """Ends the game and saves score."""
         self.game_active = False
-        self.start_btn.config(state='normal')
-        self.status_label.config(text="Game Over!", fg=Colors.DANGER)
+        self.start_btn.configure(state='normal')
+        self.status_label.configure(text="Game Over!", text_color=Colors.DANGER)
         
         time_taken = time.time() - self.start_time
         self.save_score("Standard", time_taken, len(self.sequence))
         
+        try:
+            winsound.Beep(150, 500) # Fail sound
+        except:
+            pass
+
         messagebox.showinfo("Game Over", f"Game Over!\nRounds completed: {len(self.sequence) - 1}")
         self.on_close()
 
-    def on_close(self):
+    def on_close(self) -> None:
+        """Cleanup on close."""
         self.game_active = False
         super().on_close()
